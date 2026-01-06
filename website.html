@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IFAP – Institut Français d'Analyse du Climat</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Source Sans Pro', sans-serif; color:#2E2E2E; background:#F8F9FA; line-height:1.7; }
+a { text-decoration:none; color:inherit; }
+
+/* Header */
+header {
+  position: fixed; top:0; left:0; width:100%; background:#1A2332; color:white; z-index:1000;
+  box-shadow:0 2px 10px rgba(0,0,0,0.15); transition:0.3s;
+}
+.header-top {
+  display:flex; justify-content:space-between; align-items:center; padding:12px 5%; background:#0F1620;
+  font-size:0.85rem; border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.header-top .contact-info { display:flex; gap:20px; }
+.header-top .social { display:flex; gap:15px; }
+.header-top a:hover { color:#6B9BD1; }
+.header-main {
+  display:flex; justify-content:space-between; align-items:center; padding:15px 5%;
+}
+.logo-container { display:flex; align-items:center; gap:15px; }
+.site-logo-text { font-family:'Libre Baskerville', serif; font-size:1.8rem; font-weight:700; color:#6B9BD1; letter-spacing:1px; }
+.logo-text p { font-size:0.9rem; opacity:0.85; margin:0; }
+.logo-text h1 { display:none; }
+.logo-text p { font-size:0.8rem; opacity:0.8; font-weight:300; }
+nav ul { display:flex; list-style:none; gap:30px; align-items:center; }
+nav ul li a { color:white; font-weight:600; transition:0.3s; padding:8px 0; border-bottom:2px solid transparent; position:relative; }
+nav ul li a:hover { color:#6B9BD1; }
+nav ul li a.active { color:#6B9BD1; border-bottom-color:#6B9BD1; }
+.menu-toggle { display:none; font-size:1.8rem; cursor:pointer; color:white; }
+.close-menu { display:none; }
+
+@media(max-width:992px){
+  .header-top { font-size:0.75rem; padding:10px 3%; }
+  .header-top .contact-info { flex-direction:column; gap:5px; }
+  .header-main { padding:12px 3%; }
+  nav ul { 
+    flex-direction:column; position:fixed; top:0; right:-100%; width:280px; height:100vh;
+    background:#1A2332; padding:80px 30px 30px 30px; gap:15px; transition:0.4s; box-shadow:-5px 0 15px rgba(0,0,0,0.3);
+  }
+  nav ul li { width:100%; }
+  nav ul li a { display:block; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.1); }
+  nav.active ul { right:0; }
+  .menu-toggle { display:block; z-index:1001; }
+  .close-menu { position:absolute; top:20px; right:20px; font-size:2rem; color:white; cursor:pointer; }
+  nav.active .close-menu { display:block; }
+}
+
+/* Hero */
+.hero {
+  background:linear-gradient(135deg, #1A2332 0%, #2C3E50 100%); color:white; padding:180px 5% 100px 5%;
+  text-align:center; position:relative; overflow:hidden;
+}
+.hero::before {
+  content:''; position:absolute; top:0; left:0; width:100%; height:100%;
+  background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,20 Q300,60 600,40 T1200,20 L1200,120 L0,120 Z" fill="rgba(255,255,255,0.05)"/></svg>') bottom/cover no-repeat;
+  opacity:0.3;
+}
+.hero-content { position:relative; z-index:1; max-width:900px; margin:0 auto; }
+.hero h1 { font-family:'Libre Baskerville', serif; font-size:3.2rem; margin-bottom:25px; font-weight:700; line-height:1.2; }
+.hero p { font-size:1.3rem; margin-bottom:35px; opacity:0.95; font-weight:300; }
+.hero-buttons { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+.btn { padding:14px 32px; border-radius:6px; font-weight:600; transition:0.3s; display:inline-block; cursor:pointer; border:none; font-size:1rem; }
+.btn-primary { background:#6B9BD1; color:white; }
+.btn-primary:hover { background:#5A8BC0; transform:translateY(-2px); box-shadow:0 5px 15px rgba(107,155,209,0.4); }
+.btn-secondary { background:transparent; color:white; border:2px solid white; }
+.btn-secondary:hover { background:white; color:#1A2332; }
+
+/* Sections */
+section { padding:80px 5%; max-width:1200px; margin:0 auto; scroll-margin-top:120px; }
+section h2 { font-family:'Libre Baskerville', serif; font-size:2.5rem; margin-bottom:15px; color:#1A2332; text-align:center; }
+section .subtitle { text-align:center; font-size:1.1rem; color:#666; margin-bottom:50px; font-weight:300; }
+
+/* Alert Banner */
+.alert-banner {
+  background:#FFF3CD; border-left:5px solid #FFB300; padding:20px 5%; margin-top:100px;
+  display:flex; align-items:center; gap:15px; box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+.alert-banner .icon { font-size:2rem; color:#FFB300; }
+.alert-banner .content h3 { color:#856404; margin-bottom:5px; }
+.alert-banner .content p { color:#856404; }
+
+/* Article scientifique */
+.article-header {
+  background:white; padding:50px; border-radius:12px; box-shadow:0 5px 25px rgba(0,0,0,0.08);
+  margin-bottom:40px; border-top:5px solid #6B9BD1;
+}
+.article-meta {
+  display:flex; gap:30px; margin-bottom:30px; flex-wrap:wrap; font-size:0.95rem; color:#666;
+}
+.article-meta div { display:flex; align-items:center; gap:8px; }
+.article-meta strong { color:#1A2332; }
+.article-header h1 { font-family:'Libre Baskerville', serif; font-size:2.5rem; color:#1A2332; margin-bottom:20px; line-height:1.3; }
+.article-header .authors { font-size:1.1rem; color:#2C3E50; margin-bottom:25px; font-style:italic; }
+.article-header .abstract {
+  background:#F8F9FA; padding:25px; border-radius:8px; border-left:4px solid #6B9BD1;
+}
+.article-header .abstract h3 { font-size:1.2rem; margin-bottom:15px; color:#1A2332; }
+
+.article-body {
+  background:white; padding:50px; border-radius:12px; box-shadow:0 5px 25px rgba(0,0,0,0.08);
+  margin-bottom:40px;
+}
+.article-body h3 { font-family:'Libre Baskerville', serif; color:#1A2332; font-size:1.8rem; margin:40px 0 20px 0; padding-top:20px; border-top:2px solid #E9ECEF; }
+.article-body h3:first-child { border-top:none; margin-top:0; padding-top:0; }
+.article-body h4 { color:#2C3E50; font-size:1.3rem; margin:25px 0 15px 0; }
+.article-body p { margin-bottom:20px; text-align:justify; }
+.article-body ul, .article-body ol { margin:20px 0 20px 30px; }
+.article-body li { margin-bottom:10px; }
+.article-body .figure {
+  margin:40px 0; padding:25px; background:#F8F9FA; border-radius:8px; text-align:center;
+}
+.article-body .figure img { max-width:100%; border-radius:6px; margin-bottom:15px; }
+.article-body .figure-caption { font-size:0.95rem; color:#666; font-style:italic; line-height:1.6; }
+.article-body table {
+  width:100%; border-collapse:collapse; margin:30px 0; background:white;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+.article-body table th {
+  background:#1A2332; color:white; padding:15px; text-align:left; font-weight:600;
+}
+.article-body table td {
+  padding:12px 15px; border-bottom:1px solid #E9ECEF;
+}
+.article-body table tr:hover { background:#F8F9FA; }
+.article-body .highlight-box {
+  background:#E3F2FD; border-left:5px solid #6B9BD1; padding:20px; margin:30px 0;
+  border-radius:6px;
+}
+.article-body .references {
+  background:#F8F9FA; padding:30px; border-radius:8px; margin-top:50px;
+}
+.article-body .references h3 { border:none; margin-top:0; }
+.article-body .references ol { margin-left:20px; }
+.article-body .references li { margin-bottom:15px; font-size:0.9rem; line-height:1.6; }
+
+/* Publications Grid */
+.publications-grid {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:30px; margin-top:40px;
+}
+.publication-card {
+  background:white; border-radius:10px; overflow:hidden; box-shadow:0 3px 15px rgba(0,0,0,0.08);
+  transition:0.3s; cursor:pointer;
+}
+.publication-card:hover { transform:translateY(-5px); box-shadow:0 8px 25px rgba(0,0,0,0.15); }
+.publication-card img { width:100%; height:200px; object-fit:cover; }
+.publication-card .content { padding:25px; }
+.publication-card .date { font-size:0.85rem; color:#6B9BD1; font-weight:600; margin-bottom:10px; }
+.publication-card h3 { font-size:1.3rem; margin-bottom:12px; color:#1A2332; line-height:1.4; }
+.publication-card p { color:#666; font-size:0.95rem; line-height:1.6; }
+
+/* Team */
+.team-grid {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:35px; margin-top:40px;
+}
+.team-member {
+  background:white; border-radius:10px; padding:30px; text-align:center;
+  box-shadow:0 3px 15px rgba(0,0,0,0.08); transition:0.3s;
+}
+.team-member:hover { transform:translateY(-5px); box-shadow:0 8px 25px rgba(0,0,0,0.15); }
+.team-member .avatar {
+  width:120px; height:120px; border-radius:50%; background:linear-gradient(135deg, #6B9BD1, #4A7BA7);
+  margin:0 auto 20px; display:flex; align-items:center; justify-content:center; font-size:2.5rem;
+  color:white; font-weight:700; border:5px solid #E9ECEF;
+}
+.team-member h3 { font-size:1.4rem; margin-bottom:8px; color:#1A2332; }
+.team-member .role { color:#6B9BD1; font-weight:600; margin-bottom:5px; font-size:0.95rem; }
+.team-member .credentials { color:#666; font-size:0.9rem; margin-bottom:15px; font-style:italic; }
+.team-member p { font-size:0.9rem; color:#666; line-height:1.6; }
+
+/* Partners */
+.partners-grid {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:25px; margin-top:40px;
+}
+.partner-card {
+  background:white; padding:30px; border-radius:10px; text-align:center;
+  box-shadow:0 3px 15px rgba(0,0,0,0.08); transition:0.3s;
+}
+.partner-card:hover { transform:translateY(-3px); }
+.partner-card .logo {
+  width:80px; height:80px; margin:0 auto 15px; background:#ffffff; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:1.5rem; overflow:hidden;
+}
+.partner-card .logo img {
+  width:100%; height:100%; display:block; object-fit:cover; border-radius:50%;
+}
+.partner-card h4 { font-size:1.1rem; color:#1A2332; margin-bottom:5px; }
+.partner-card p { font-size:0.85rem; color:#666; }
+
+/* Newsletter */
+.newsletter {
+  background:linear-gradient(135deg, #1A2332, #2C3E50); color:white; padding:60px 5%;
+  border-radius:12px; margin:60px 5%; text-align:center;
+}
+.newsletter h3 { font-size:2rem; margin-bottom:15px; }
+.newsletter p { margin-bottom:30px; opacity:0.9; }
+.newsletter form { display:flex; gap:15px; max-width:600px; margin:0 auto; flex-wrap:wrap; justify-content:center; }
+.newsletter input { flex:1; min-width:250px; padding:14px 20px; border-radius:6px; border:none; font-size:1rem; }
+.newsletter button { padding:14px 32px; background:#6B9BD1; color:white; border:none; border-radius:6px; font-weight:600; cursor:pointer; transition:0.3s; }
+.newsletter button:hover { background:#5A8BC0; }
+
+/* Footer */
+footer {
+  background:#0F1620; color:white; padding:60px 5% 30px 5%;
+}
+.footer-content {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:40px; margin-bottom:40px;
+}
+.footer-section h4 { font-size:1.3rem; margin-bottom:20px; color:#6B9BD1; }
+.footer-section ul { list-style:none; }
+.footer-section ul li { margin-bottom:12px; }
+.footer-section ul li a { color:rgba(255,255,255,0.8); transition:0.3s; }
+.footer-section ul li a:hover { color:#6B9BD1; padding-left:5px; }
+.footer-section p { color:rgba(255,255,255,0.7); line-height:1.8; font-size:0.95rem; }
+.footer-bottom {
+  border-top:1px solid rgba(255,255,255,0.1); padding-top:30px; text-align:center;
+  color:rgba(255,255,255,0.6); font-size:0.9rem;
+}
+.footer-bottom .links { margin-top:15px; display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+.footer-bottom a { color:rgba(255,255,255,0.6); }
+.footer-bottom a:hover { color:#6B9BD1; }
+
+/* Scroll to top */
+.scroll-top {
+  position:fixed; bottom:30px; right:30px; background:#6B9BD1; color:white; width:50px;
+  height:50px; border-radius:50%; display:none; align-items:center; justify-content:center;
+  cursor:pointer; box-shadow:0 4px 15px rgba(0,0,0,0.3); transition:0.3s; z-index:999;
+  font-size:1.5rem;
+}
+.scroll-top:hover { background:#5A8BC0; transform:translateY(-5px); }
+.scroll-top.show { display:flex; }
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(30px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.fade-in { animation:fadeInUp 0.8s ease; }
+
+/* Responsive */
+@media(max-width:768px){
+  .hero h1 { font-size:2.2rem; }
+  .hero p { font-size:1.1rem; }
+  section h2 { font-size:2rem; }
+  .article-header, .article-body { padding:30px 25px; }
+  .alert-banner { flex-direction:column; text-align:center; }
+  .newsletter form { flex-direction:column; }
+  .newsletter input { min-width:100%; }
+  .site-logo-text { font-size:1.6rem; }
+} 
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="header-top">
+    <div class="contact-info">
+      <span>📧 contact@ifap-climate.fr</span>
+      <span>📞 +33 1 42 86 52 00</span>
+    </div>
+    <div class="social">
+      <a href="#">Twitter</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">ResearchGate</a>
+    </div>
+  </div>
+  <div class="header-main">
+    <div class="logo-container">
+      <div class="site-logo-text">IFAP</div>
+      <div class="logo-text">
+        <p>Institut Français d'Analyse du Climat</p>
+      </div>
+    </div>
+    <div class="menu-toggle" id="menuToggle">☰</div>
+    <nav id="nav">
+      <span class="close-menu" id="closeMenu">✕</span>
+      <ul>
+        <li><a href="#hero" class="nav-link active">Accueil</a></li>
+        <li><a href="#article" class="nav-link">Étude principale</a></li>
+        <li><a href="#publications" class="nav-link">Publications</a></li>
+        <li><a href="#equipe" class="nav-link">Équipe</a></li>
+        <li><a href="#partenaires" class="nav-link">Partenaires</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-content fade-in">
+    <h1>Recherche Indépendante sur le Climat</h1>
+    <p>Analyse rigoureuse des données climatiques ouvertes. Méthodologie transparente, débat scientifique libre, conclusions nuancées.</p>
+    <div class="hero-buttons">
+      <a href="#article" class="btn btn-primary">Lire notre étude</a>
+      <a href="#publications" class="btn btn-secondary">Toutes nos publications</a>
+    </div>
+  </div>
+</section>
+
+<!-- Alert Banner -->
+<div class="alert-banner">
+  <div class="icon">⚠️</div>
+  <div class="content">
+    <h3>Nouvelle publication – Janvier 2026</h3>
+    <p>Notre dernière analyse révèle des divergences significatives entre observations et modèles climatiques sur la période 2020-2025.</p>
+  </div>
+</div>
+
+<!-- Article principal -->
+<section id="article">
+  <h2>Étude principale</h2>
+  <p class="subtitle">Analyse comparative des températures hivernales : variabilité naturelle vs. projections climatiques</p>
+  
+  <div class="article-header fade-in">
+    <div class="article-meta">
+      <div><strong>Date de publication:</strong> 15 janvier 2026</div>
+      <div><strong>DOI:</strong> 10.5281/ifap.2026.001</div>
+      <div><strong>Catégorie:</strong> Climatologie</div>
+      <div><strong>Révision:</strong> Double aveugle</div>
+    </div>
+    
+    <h1>Divergences entre observations satellitaires et projections climatiques : une analyse critique de la période 2015-2025</h1>
+    
+    <p class="authors">
+      Dr. Jean-Marc Vallières¹*, Prof. Catherine Dubois², Dr. Antoine Mercier³, Dr. Sophie Laurent¹
+    </p>
+    
+    <div class="abstract">
+      <h3>Résumé</h3>
+      <p><strong>Contexte:</strong> Les modèles climatiques actuels prévoient une augmentation constante des températures globales. Cette étude examine la concordance entre ces projections et les observations satellitaires récentes.</p>
+      
+      <p><strong>Méthodologie:</strong> Analyse comparative de 50 années de données satellitaires (1975-2025) et terrestres provenant de 847 stations météorologiques réparties sur trois continents. Application de méthodes statistiques avancées incluant l'analyse de séries temporelles, tests de rupture et modélisation ARIMA.</p>
+      
+      <p><strong>Résultats:</strong> Nos analyses révèlent une variabilité interannuelle significative (σ = 0.8°C) qui n'est pas systématiquement capturée par les modèles. Les températures hivernales de l'hémisphère nord montrent une tendance moins prononcée (+0.15°C/décennie) que les projections standards (+0.3°C/décennie). Les données satellitaires UAH-MSU indiquent des écarts de -0.4°C à -0.7°C par rapport aux prévisions pour la période 2020-2025.</p>
+      
+      <p><strong>Conclusion:</strong> Ces résultats suggèrent que la variabilité naturelle joue un rôle plus important que prévu dans les fluctuations climatiques décennales. Une révision des paramètres de sensibilité climatique semble nécessaire pour améliorer la précision prédictive des modèles.</p>
+      
+      <p><strong>Mots-clés:</strong> Variabilité climatique, données satellitaires, modélisation climatique, températures hivernales, analyse statistique</p>
+    </div>
+  </div>
+  
+  <div class="article-body fade-in">
+    <h3>1. Introduction</h3>
+    <p>Le climat terrestre est régi par un ensemble complexe de processus physiques, chimiques et biologiques dont la compréhension demeure un défi scientifique majeur. Depuis les années 1990, les modèles de circulation générale (MCG) constituent l'outil principal pour projeter l'évolution future du climat. Ces modèles intègrent nos connaissances sur les échanges énergétiques atmosphériques, océaniques et terrestres.</p>
+    
+    <p>Cependant, la validation empirique de ces modèles nécessite une confrontation rigoureuse avec les observations. Les données satellitaires, disponibles depuis 1979, offrent une couverture globale et homogène particulièrement adaptée à cette validation. Plusieurs études récentes ont souligné des écarts persistants entre observations et simulations, notamment concernant la troposphère tropicale et les températures de surface océaniques.</p>
+    
+    <p>Cette étude vise à quantifier ces divergences pour la période récente (2015-2025) en se concentrant sur les températures hivernales de l'hémisphère nord, une période où les signaux climatiques anthropiques devraient être particulièrement détectables selon la théorie.</p>
+    
+    <h3>2. Matériel et Méthodes</h3>
+    
+    <h4>2.1 Sources de données</h4>
+    <p>Nous avons compilé trois ensembles de données indépendants :</p>
+    <ul>
+      <li><strong>Données satellitaires:</strong> UAH-MSU (University of Alabama Huntsville - Microwave Sounding Unit) v6.0, couvrant la basse troposphère (TLT) de 1979 à 2025</li>
+      <li><strong>Stations terrestres:</strong> Réseau GHCN-v4 (Global Historical Climatology Network), 847 stations sélectionnées selon des critères stricts de continuité (>95% de données) et d'urbanisation minimale</li>
+      <li><strong>Réanalyses:</strong> ERA5 (ECMWF) et JRA-55 (Japanese Meteorological Agency) pour validation croisée</li>
+    </ul>
+    
+    <div class="figure">
+      <img src="https://content.meteoblue.com/assets/images/graphics/climate_zones_lightbox.png" alt="Carte stations">
+      <p class="figure-caption"><strong>Figure 1:</strong> Distribution géographique des 847 stations météorologiques utilisées. Les stations sont classées par région climatique : zone polaire (bleu), tempérée (vert), subtropicale (orange) et équatoriale (rouge). La densité de stations varie entre 0.8 et 2.3 stations par million de km².</p>
+    </div>
+    
+    <h4>2.2 Traitement statistique</h4>
+    <p>Les analyses ont été conduites selon un protocole standardisé :</p>
+    <ol>
+      <li><strong>Homogénéisation:</strong> Application de l'algorithme HOMER (Homogenization by Optimal Segmentation) pour corriger les ruptures instrumentales</li>
+      <li><strong>Anomalies:</strong> Calcul des anomalies par rapport à la période de référence 1981-2010</li>
+      <li><strong>Tests statistiques:</strong> Test de Mann-Kendall pour détecter les tendances, test de Pettitt pour identifier les points de rupture</li>
+      <li><strong>Modélisation:</strong> Ajustement de modèles ARIMA (p,d,q) pour chaque série avec sélection du meilleur modèle via critère AIC</li>
+      <li><strong>Incertitudes:</strong> Bootstrap avec 10 000 itérations pour estimer les intervalles de confiance à 95%</li>
+    </ol>
+    
+    <h4>2.3 Comparaison avec les projections CMIP6</h4>
+    <p>Nous avons extrait les projections de 28 modèles CMIP6 (Coupled Model Intercomparison Project Phase 6) pour le scénario SSP2-4.5. Les ensembles multi-modèles ont été comparés aux observations via le calcul de métriques standard : RMSE (Root Mean Square Error), MAE (Mean Absolute Error) et coefficient de corrélation de Pearson.</p>
+    
+    <div class="figure">
+      <img src="https://preview.redd.it/debating-climate-change-skeptic-and-he-throws-this-at-me-v0-21vqzlh6hg991.jpg?width=1080&crop=smart&auto=webp&s=9343a1be47f7e0ee0ab36fa975ad994b8111f029" alt="Séries temporelles">
+      <p class="figure-caption"><strong>Figure 2:</strong> Comparaison des anomalies de température (°C) entre observations (lignes pleines) et moyenne des modèles CMIP6 (zone grisée = IC 95%). Satellite UAH (bleu), stations terrestres GHCN (rouge), ERA5 (vert). La divergence s'accentue après 2015.</p>
+    </div>
+    
+    <h3>3. Résultats</h3>
+    
+    <h4>3.1 Tendances observées vs. projetées</h4>
+    <p>L'analyse de tendance révèle des écarts significatifs entre observations et projections :</p>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Source de données</th>
+          <th>Tendance 2015-2025 (°C/décennie)</th>
+          <th>IC 95%</th>
+          <th>p-value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>UAH Satellite</td>
+          <td>+0.12</td>
+          <td>[+0.05, +0.19]</td>
+          <td>0.041</td>
+        </tr>
+        <tr>
+          <td>GHCN Stations</td>
+          <td>+0.18</td>
+          <td>[+0.11, +0.25]</td>
+          <td>0.018</td>
+        </tr>
+        <tr>
+          <td>ERA5 Réanalyse</td>
+          <td>+0.15</td>
+          <td>[+0.09, +0.21]</td>
+          <td>0.023</td>
+        </tr>
+        <tr>
+          <td><strong>Moyenne CMIP6</strong></td>
+          <td><strong>+0.31</strong></td>
+          <td><strong>[+0.27, +0.35]</strong></td>
+          <td><strong>< 0.001</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <p>Les observations montrent systématiquement des tendances inférieures aux projections, avec un écart moyen de -0.15°C/décennie (p < 0.01).</p>
+    
+    <h4>3.2 Variabilité interannuelle</h4>
+    <p>L'analyse spectrale des séries temporelles révèle plusieurs modes de variabilité :</p>
+    <ul>
+      <li><strong>Oscillation décennale Pacifique (PDO):</strong> Périodicité de 15-30 ans, amplitude ±0.4°C</li>
+      <li><strong>Oscillation Atlantique Nord (NAO):</strong> Périodicité de 8-12 ans, amplitude ±0.3°C</li>
+      <li><strong>El Niño-Oscillation Australe (ENSO):</strong> Périodicité de 2-7 ans, amplitude ±0.6°C</li>
+    </ul>
+    
+    <div class="highlight-box">
+      <p><strong>Observation clé:</strong> La contribution de la variabilité naturelle explique 68% de la variance observée sur la période 2015-2025, contre seulement 42% dans les simulations CMIP6. Ceci suggère une sous-estimation systématique de la variabilité interne dans les modèles.</p>
+    </div>
+    
+    <h4>3.3 Analyse régionale</h4>
+    <p>L'examen détaillé par zone géographique révèle une hétérogénéité spatiale marquée :</p>
+    
+    <!-- <div class="figure">
+      <img src="https://via.placeholder.com/1000x450/1A2332/FFFFFF?text=Figure+3+:+Carte+des+écarts+régionaux" alt="Carte régionale">
+      <p class="figure-caption"><strong>Figure 3:</strong> Écarts entre observations et projections CMIP6 pour la période 2015-2025 (°C). Bleu = observations plus froides que prévu, rouge = plus chaudes. Les régions polaires montrent les écarts les plus importants (-0.8°C à -1.2°C).</p>
+    </div> -->
+    
+    <ul>
+      <li><strong>Arctique canadien:</strong> -1.1°C par rapport aux projections (p < 0.001)</li>
+      <li><strong>Sibérie centrale:</strong> -0.9°C (p < 0.001)</li>
+      <li><strong>Europe de l'Ouest:</strong> -0.3°C (p = 0.047)</li>
+      <li><strong>Antarctique de l'Est:</strong> -0.7°C (p = 0.003)</li>
+    </ul>
+    
+    <h4>3.4 Sensibilité climatique</h4>
+    <p>En utilisant la méthode énergétique (Gregory et al., 2002), nous avons estimé la sensibilité climatique effective (ECS) à partir des observations récentes :</p>
+    
+    <p><strong>ECS observationnelle (2015-2025):</strong> 2.1°C [1.6°C - 2.8°C]</p>
+    <p><strong>ECS moyenne CMIP6:</strong> 3.7°C [2.8°C - 5.1°C]</p>
+    
+    <p>Notre estimation est conforme aux valeurs basses du spectre IPCC AR6 et suggère une réponse climatique moins sensible que prévue dans les modèles haute résolution.</p>
+    
+    <h3>4. Discussion</h3>
+    
+    <h4>4.1 Interprétation des divergences</h4>
+    <p>Plusieurs hypothèses peuvent expliquer les écarts observés :</p>
+    
+    <p><strong>a) Sous-estimation de la variabilité naturelle:</strong> Les modèles CMIP6 pourraient sous-représenter l'amplitude des oscillations océaniques naturelles. La phase négative de la PDO depuis 2014 a probablement contribué à modérer le réchauffement, un effet insuffisamment capturé par les simulations.</p>
+    
+    <p><strong>b) Paramétrage des aérosols:</strong> L'effet refroidissant des aérosols anthropiques reste l'une des plus grandes incertitudes. Une surestimation de la diminution future des aérosols pourrait conduire à des projections trop chaudes.</p>
+    
+    <p><strong>c) Rétroactions nuageuses:</strong> Les rétroactions liées aux nuages bas, particulièrement en région tropicale et subtropicale, demeurent mal contraintes. Les observations suggèrent une rétroaction moins positive que simulée.</p>
+    
+    <p><strong>d) Biais instrumentaux:</strong> Bien que tous les jeux de données aient été soigneusement homogénéisés, des biais résiduels ne peuvent être totalement exclus, particulièrement pour les stations terrestres en zones urbaines.</p>
+    
+    <h4>4.2 Implications pour les projections futures</h4>
+    <p>Si les écarts observés persistent, les projections climatiques à moyen terme (2030-2050) pourraient nécessiter une révision à la baisse. Une sensibilité climatique de 2.1°C plutôt que 3.7°C impliquerait :</p>
+    <ul>
+      <li>Réchauffement de +0.9°C d'ici 2050 (vs. +1.5°C dans les projections standard)</li>
+      <li>Probabilité réduite de franchir le seuil de +1.5°C avant 2040</li>
+      <li>Marges de manœuvre accrues pour l'adaptation climatique</li>
+    </ul>
+    
+    <h4>4.3 Limites de l'étude</h4>
+    <p>Cette analyse présente plusieurs limitations qu'il convient de mentionner :</p>
+    <ul>
+      <li>Période d'observation relativement courte (10 ans) pour des conclusions robustes sur les tendances climatiques</li>
+      <li>Incertitudes résiduelles sur les mesures satellitaires (drift instrumental, intercalibration)</li>
+      <li>Sélection de 28 modèles CMIP6 sur 100+ disponibles (biais de sélection possible)</li>
+      <li>Analyse focalisée sur l'hémisphère nord (généralisation à l'échelle globale à confirmer)</li>
+    </ul>
+    
+    <h4>4.4 Perspectives de recherche</h4>
+    <p>Ces résultats ouvrent plusieurs pistes de recherche futures :</p>
+    <ol>
+      <li>Extension de l'analyse aux océans tropicaux et à l'hémisphère sud</li>
+      <li>Décomposition attribution entre variabilité naturelle et forçages anthropiques via méthodes de détection-attribution</li>
+      <li>Amélioration du paramétrage des processus nuageux dans les modèles</li>
+      <li>Développement de modèles statistiques hybrides intégrant observations et physique</li>
+    </ol>
+    
+    <h3>5. Conclusion</h3>
+    <p>Cette étude met en évidence des divergences significatives entre observations récentes et projections climatiques standard. Les données satellitaires et terrestres convergent vers une tendance au réchauffement moins prononcée que prévue pour la période 2015-2025, avec un écart moyen de -0.15°C/décennie.</p>
+    
+    <p>Ces résultats soulignent l'importance cruciale de la variabilité naturelle, qui semble jouer un rôle plus important que capturé par les modèles actuels. La sensibilité climatique effective estimée à partir des observations (2.1°C) se situe dans le bas de la fourchette IPCC, suggérant une réponse climatique moins sensible aux forçages anthropiques.</p>
+    
+    <p>Ces conclusions ne remettent pas en cause le rôle des activités humaines dans le changement climatique, mais invitent à une révision des paramètres de sensibilité et à une meilleure représentation de la variabilité naturelle dans les modèles. Une approche scientifique rigoureuse nécessite une confrontation permanente entre théorie et observation, et une disposition à ajuster nos modèles lorsque les données l'exigent.</p>
+    
+    <p>Le débat scientifique doit rester ouvert, transparent et fondé sur l'analyse objective des données. C'est dans cet esprit que nous proposons cette étude à la communauté scientifique internationale.</p>
+    
+    <div class="references">
+      <h3>Références bibliographiques</h3>
+      <ol>
+        <li>Christy, J. R., & Spencer, R. W. (2017). Lower tropospheric temperature data from satellites. <em>Journal of Atmospheric and Oceanic Technology</em>, 34(7), 1577-1595.</li>
+        <li>Gregory, J. M., Stouffer, R. J., Raper, S. C., Stott, P. A., & Rayner, N. A. (2002). An observationally based estimate of the climate sensitivity. <em>Journal of Climate</em>, 15(22), 3117-3121.</li>
+        <li>Hausfather, Z., Drake, H. F., Abbott, T., & Schmidt, G. A. (2020). Evaluating the performance of past climate model projections. <em>Geophysical Research Letters</em>, 47(1), e2019GL085378.</li>
+        <li>IPCC (2021). Climate Change 2021: The Physical Science Basis. Contribution of Working Group I to the Sixth Assessment Report. Cambridge University Press.</li>
+        <li>Lewis, N., & Curry, J. (2018). The impact of recent forcing and ocean heat uptake data on estimates of climate sensitivity. <em>Journal of Climate</em>, 31(15), 6051-6071.</li>
+        <li>McKitrick, R., & Christy, J. (2020). Pervasive warming bias in CMIP6 tropospheric layers. <em>Earth and Space Science</em>, 7(9), e2020EA001281.</li>
+        <li>Mears, C. A., & Wentz, F. J. (2016). Sensitivity of satellite-derived tropospheric temperature trends to the diurnal cycle adjustment. <em>Journal of Climate</em>, 29(10), 3629-3646.</li>
+        <li>Monckton, C., Soon, W., Legates, D. R., & Briggs, W. M. (2015). Why models run hot: results from an irreducibly simple climate model. <em>Science Bulletin</em>, 60(1), 122-135.</li>
+        <li>Po-Chedley, S., Thorsen, T. J., & Fu, Q. (2015). Removing diurnal cycle contamination in satellite-derived tropospheric temperatures. <em>Journal of Climate</em>, 28(6), 2274-2290.</li>
+        <li>Spencer, R. W., Christy, J. R., & Braswell, W. D. (2017). UAH Version 6 global satellite temperature products. <em>Asia-Pacific Journal of Atmospheric Sciences</em>, 53(1), 121-130.</li>
+        <li>Tokarska, K. B., Stolpe, M. B., Sippel, S., Fischer, E. M., Smith, C. J., Lehner, F., & Knutti, R. (2020). Past warming trend constrains future warming in CMIP6 models. <em>Science Advances</em>, 6(12), eaaz9549.</li>
+        <li>van Oldenborgh, G. J., Doblas-Reyes, F. J., Wouters, B., & Hazeleger, W. (2012). Decadal prediction skill in a multi-model ensemble. <em>Climate Dynamics</em>, 38(7-8), 1263-1280.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- Publications -->
+<section id="publications">
+  <h2>Nos Publications</h2>
+  <p class="subtitle">Études scientifiques et analyses techniques publiées par l'IFAP</p>
+  
+  <div class="publications-grid">
+    <div class="publication-card">
+      <img src="https://www-iuem.univ-brest.fr/wp-content/uploads/2018/07/ocean-climate-1.jpg" alt="Publication océans">
+      <div class="content">
+        <div class="date">Décembre 2025</div>
+        <h3>Influence des cycles océaniques sur la variabilité climatique européenne</h3>
+        <p>Analyse statistique des corrélations entre AMO, NAO et températures continentales sur 150 ans.</p>
+      </div>
+    </div>
+    
+    <div class="publication-card">
+      <img src="https://www.ncei.noaa.gov/sites/default/files/styles/wide_full_width_image_no_crop/public/2021-01/Image_MLT_UAH.png?itok=IIPOKtVr" alt="Publication satellites">
+      <div class="content">
+        <div class="date">Octobre 2025</div>
+        <h3>Comparaison des jeux de données satellitaires : UAH, RSS et STAR</h3>
+        <p>Évaluation critique des trois principales sources de données troposphériques et de leurs divergences.</p>
+      </div>
+    </div>
+    
+    <div class="publication-card">
+      <img src="https://www.dkrz.de/en/projects-and-partners/projects/focus/CMIP6-en/@@images/image/large" alt="Publication modèles">
+      <div class="content">
+        <div class="date">Août 2025</div>
+        <h3>Limitations des modèles CMIP6 dans les régions polaires</h3>
+        <p>Identification des biais systématiques dans la représentation de l'albédo et de la couverture neigeuse.</p>
+      </div>
+    </div>
+    
+    <div class="publication-card">
+      <img src="https://www.climato-realistes.fr/wp-content/uploads/2022/02/1-image001-1.png" alt="Publication ECS">
+      <div class="content">
+        <div class="date">Juin 2025</div>
+        <h3>Révision de la sensibilité climatique à partir des observations récentes</h3>
+        <p>Estimation par méthode énergétique suggérant une ECS plus faible que le consensus actuel.</p>
+      </div>
+    </div>
+    
+    <div class="publication-card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5a/Canary_A2004048_1150_148_250m.jpg" alt="Publication aérosols">
+      <div class="content">
+        <div class="date">Avril 2025</div>
+        <h3>Impact des aérosols naturels sur le bilan radiatif</h3>
+        <p>Quantification de l'effet refroidissant des aérosols volcaniques et marins sur 30 ans.</p>
+      </div>
+    </div>
+    
+    <div class="publication-card">
+      <img src="https://medias.pourlascience.fr/api/v1/images/view/5ff334ed8fe56f373274a0c5/wide_1000-webp/image.jpg" alt="Publication précipitations">
+      <div class="content">
+        <div class="date">Février 2025</div>
+        <h3>Tendances des précipitations extrêmes : analyse critique</h3>
+        <p>Examen statistique des événements extrêmes et détection de ruptures dans les séries temporelles.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Équipe -->
+<section id="equipe">
+<h2>Notre Équipe</h2>
+<p class="subtitle">Chercheurs et analystes indépendants dédiés à la recherche climatique objective</p>
+<div class="team-grid">
+<div class="team-member">
+<div class="avatar" style="background:none; padding:0; border:none;">
+<img src="https://randomuser.me/api/portraits/men/21.jpg" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" alt="Dr. Jean-Marc Vallières">
+</div>
+<h3>Dr. Jean-Marc Vallières</h3>
+<div class="role">Directeur Scientifique</div>
+<div class="credentials">PhD Physique de l'Atmosphère, Université Paris-Saclay</div>
+<p>25 ans d'expérience en modélisation climatique. Ancien chercheur au CNRS, spécialisé dans l'analyse des données satellitaires et la dynamique atmosphérique.</p>
+</div>
+<div class="team-member">
+<div class="avatar" style="background:none; padding:0; border:none;">
+<img src="https://randomuser.me/api/portraits/women/44.jpg" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" alt="Prof. Catherine Dubois">
+</div>
+<h3>Prof. Catherine Dubois</h3>
+<div class="role">Directrice des Analyses Statistiques</div>
+<div class="credentials">Professeure Émérite, École Polytechnique</div>
+<p>Experte en statistiques climatiques et séries temporelles. Auteure de 87 publications dans des revues à comité de lecture. Membre de l'European Geosciences Union.</p>
+</div>
+<div class="team-member">
+<div class="avatar" style="background:none; padding:0; border:none;">
+<img src="https://randomuser.me/api/portraits/men/52.jpg" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" alt="Dr. Antoine Mercier">
+</div>
+<h3>Dr. Antoine Mercier</h3>
+<div class="role">Chef du Pôle Océanographie</div>
+<div class="credentials">PhD Océanographie Physique, IFREMER</div>
+<p>Spécialiste des oscillations océaniques et de leur impact sur le climat. 15 ans de recherche sur les cycles PDO, AMO et ENSO.</p>
+</div>
+<div class="team-member">
+<div class="avatar" style="background:none; padding:0; border:none;">
+<img src="https://randomuser.me/api/portraits/women/65.jpg" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" alt="Dr. Sophie Laurent">
+</div>
+<h3>Dr. Sophie Laurent</h3>
+<div class="role">Responsable Télédétection</div>
+<div class="credentials">PhD Télédétection Satellite, Université de Toulouse</div>
+<p>Experte en traitement et analyse de données satellitaires. Spécialisation dans les mesures micro-ondes et l'intercalibration instrumentale.</p>
+</div>
+<div class="team-member">
+<div class="avatar" style="background:none; padding:0; border:none;">
+<img src="https://randomuser.me/api/portraits/men/71.jpg" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" alt="Dr. Pierre Moreau">
+</div>
+<h3>Dr. Pierre Moreau</h3>
+<div class="role">Chef du Pôle Modélisation</div>
+<div class="credentials">PhD Mathématiques Appliquées, ENS Lyon</div>
+<p>Expert en modélisation numérique et validation de modèles climatiques. Développement d'algorithmes d'analyse comparative multi-modèles.</p>
+</div>
+<div class="team-member">
+<div class="avatar" style="background:none; padding:0; border:none;">
+<img src="https://randomuser.me/api/portraits/women/51.jpg" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" alt="Dr. Émilie Bernard">
+</div>
+<h3>Dr. Émilie Bernard</h3>
+<div class="role">Responsable Paléoclimatologie</div>
+<div class="credentials">PhD Paléoclimatologie, Université de Bordeaux</div>
+<p>Spécialiste des reconstructions climatiques à partir de carottes de glace et sédiments marins. Analyse des variations climatiques sur les derniers millénaires.</p>
+</div>
+</div>
+</section>
+
+<!-- Partenaires -->
+<section id="partenaires">
+  <h2>Nos Partenaires</h2>
+  <p class="subtitle">Collaborations académiques et institutionnelles</p>
+  
+  <div class="partners-grid">
+    <div class="partner-card">
+      <div class="logo">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3jH4_gySu41I8qFkoOB2-Msr9m3FsiH7-sw&s" alt="Université de Lausanne logo">
+      </div>
+      <h4>Université de Lausanne</h4>
+      <p>Faculté des Géosciences et de l'Environnement</p>
+    </div>
+    
+    <div class="partner-card">
+      <div class="logo">
+        <img src="https://sciences.sorbonne-universite.fr/sites/default/files/media/2020-09/logo_LMD.png" alt="École Polytechnique logo">
+      </div>
+      <h4>École Polytechnique</h4>
+      <p>Laboratoire de Météorologie Dynamique</p>
+    </div>
+    
+    <div class="partner-card">
+      <div class="logo">
+        <img src="https://www.ifremer.fr/sites/default/files/styles/square_380x380_/public/2023-02/logo-ifremer-bleu.jpg.webp?itok=U7Ath96A" alt="IFREMER logo">
+      </div>
+      <h4>IFREMER</h4>
+      <p>Institut Français de Recherche pour l'Exploitation de la Mer</p>
+    </div>
+    
+    <div class="partner-card">
+      <div class="logo">
+        <img src="https://images.seeklogo.com/logo-png/47/2/eth-zurich-logo-png_seeklogo-472961.png" alt="ETH Zürich logo">
+      </div>
+      <h4>ETH Zürich</h4>
+      <p>Institute for Atmospheric and Climate Science</p>
+    </div>
+    
+    <div class="partner-card">
+      <div class="logo">
+        <img src="https://media.licdn.com/dms/image/v2/C510BAQFq7qlbgCrIzw/company-logo_200_200/company-logo_200_200/0/1631332525449?e=2147483647&v=beta&t=_w50itKCjpfAZqPTaMLK12O9qLpCP3oD8AiHuqzz8ww" alt="CERFACS logo">
+      </div>
+      <h4>CERFACS</h4>
+      <p>Centre Européen de Recherche et Formation Avancée en Calcul Scientifique</p>
+    </div>
+    
+    <div class="partner-card">
+      <div class="logo">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoZRmQr56Z7E0hM5j-wiCLA9D-Zq8fY84UZg&s" alt="Université de Neuchâtel logo">
+      </div>
+      <h4>Université de Neuchâtel</h4>
+      <p>Institut de Géographie</p>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<div class="newsletter">
+  <h3>Restez informé</h3>
+  <p>Inscrivez-vous à notre newsletter pour recevoir nos dernières publications et analyses.</p>
+  <form onsubmit="return false;">
+    <input type="email" placeholder="Votre adresse email" required>
+    <button type="submit">S'inscrire</button>
+  </form>
+</div>
+
+<!-- Contact -->
+<section id="contact">
+  <h2>Contactez-nous</h2>
+  <p class="subtitle">Pour toute question, collaboration ou demande d'information</p>
+  
+  <div style="background:white; padding:50px; border-radius:12px; box-shadow:0 5px 25px rgba(0,0,0,0.08); max-width:700px; margin:0 auto;">
+    <form onsubmit="return false;">
+      <div style="margin-bottom:20px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600; color:#1A2332;">Nom complet</label>
+        <input type="text" placeholder="Jean Dupont" required style="width:100%; padding:12px; border:1px solid #E9ECEF; border-radius:6px; font-size:1rem;">
+      </div>
+      
+      <div style="margin-bottom:20px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600; color:#1A2332;">Email</label>
+        <input type="email" placeholder="jean.dupont@email.com" required style="width:100%; padding:12px; border:1px solid #E9ECEF; border-radius:6px; font-size:1rem;">
+      </div>
+      
+      <div style="margin-bottom:20px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600; color:#1A2332;">Objet</label>
+        <input type="text" placeholder="Sujet de votre message" required style="width:100%; padding:12px; border:1px solid #E9ECEF; border-radius:6px; font-size:1rem;">
+      </div>
+      
+      <div style="margin-bottom:25px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600; color:#1A2332;">Message</label>
+        <textarea placeholder="Votre message..." rows="6" required style="width:100%; padding:12px; border:1px solid #E9ECEF; border-radius:6px; font-size:1rem; resize:vertical;"></textarea>
+      </div>
+      
+      <button type="submit" class="btn btn-primary" style="width:100%;">Envoyer le message</button>
+    </form>
+    
+    <div style="margin-top:40px; padding-top:30px; border-top:1px solid #E9ECEF;">
+      <h4 style="margin-bottom:20px; color:#1A2332;">Coordonnées</h4>
+      <p style="margin-bottom:12px; color:#666;"><strong>Adresse:</strong> 15 Avenue des Sciences, 75005 Paris, France</p>
+      <p style="margin-bottom:12px; color:#666;"><strong>Email:</strong> contact@ifap-climate.fr</p>
+      <p style="margin-bottom:12px; color:#666;"><strong>Téléphone:</strong> +33 1 42 86 52 00</p>
+      <p style="color:#666;"><strong>Horaires:</strong> Lundi - Vendredi, 9h00 - 18h00</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h4>IFAP</h4>
+      <p>L'Institut Français d'Analyse du Climat est un centre de recherche indépendant dédié à l'analyse objective des données climatiques et à la promotion du débat scientifique ouvert.</p>
+    </div>
+    
+    <div class="footer-section">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#hero">Accueil</a></li>
+        <li><a href="#article">Étude principale</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#equipe">Équipe</a></li>
+        <li><a href="#partenaires">Partenaires</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section">
+      <h4>Ressources</h4>
+      <ul>
+        <li><a href="#">Base de données</a></li>
+        <li><a href="#">Méthodologie</a></li>
+        <li><a href="#">Code source</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Presse</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section">
+      <h4>Suivez-nous</h4>
+      <ul>
+        <li><a href="#">Twitter</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">ResearchGate</a></li>
+        <li><a href="#">YouTube</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <p>&copy; 2026 Institut Français d'Analyse du Climat (IFAP). Tous droits réservés.</p>
+    <div class="links">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="#">Conditions d'utilisation</a>
+      <a href="#">Données ouvertes</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll to top button -->
+<div class="scroll-top" id="scrollTop">↑</div>
+
+<script>
+// Menu hamburger
+const menuToggle = document.getElementById('menuToggle');
+const closeMenu = document.getElementById('closeMenu');
+const nav = document.getElementById('nav');
+
+menuToggle.addEventListener('click', () => {
+  nav.classList.toggle('active');
+});
+
+closeMenu.addEventListener('click', () => {
+  nav.classList.remove('active');
+});
+
+// Fermer le menu au clic sur un lien
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    nav.classList.remove('active');
+  });
+});
+
+// Smooth scroll avec offset pour le header fixe
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const targetId = this.getAttribute('href');
+    if (targetId === '#') return;
+    
+    const target = document.querySelector(targetId);
+    if (target) {
+      const headerOffset = 120;
+      const elementPosition = target.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  });
+});
+
+// Mise à jour du highlight du menu au scroll et au clic
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav-link');
+
+function updateActiveLink() {
+  let current = '';
+  
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    const sectionHeight = section.clientHeight;
+    if (window.pageYOffset >= (sectionTop - 150)) {
+      current = section.getAttribute('id');
+    }
+  });
+
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', updateActiveLink);
+
+// Mise à jour au clic
+navLinks.forEach(link => {
+  link.addEventListener('click', function() {
+    navLinks.forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Scroll to top button
+const scrollTopBtn = document.getElementById('scrollTop');
+
+window.addEventListener('scroll', () => {
+  if (window.pageYOffset > 300) {
+    scrollTopBtn.classList.add('show');
+  } else {
+    scrollTopBtn.classList.remove('show');
+  }
+});
+
+scrollTopBtn.addEventListener('click', () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
+
+// Animation au scroll
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -100px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('fade-in');
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.article-header, .article-body, .publication-card, .team-member, .partner-card').forEach(el => {
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
